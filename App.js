@@ -25,8 +25,7 @@ const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [stream, setStream] = useState(null)
 
-  const TOKEN =
-  "eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Mjc1NTU5NTgsImp0aSI6IjI4ZTc5MzhjLTNmNmMtNDI4Zi1iZWNkLTQ0YjllZGQwZWVkMiIsInN1YiI6IjliMTg3ZmZlLTIxOTgtNGE4YS05ZWMxLWJlOWI3ZWExOTUxYSIsInUiOiJFZG8iLCJyIjoicHJvZHVjdGlvbiIsInMiOlsicm9vbS5zZWxmLmF1ZGlvX211dGUiLCJyb29tLnNlbGYuYXVkaW9fdW5tdXRlIiwicm9vbS5zZWxmLnZpZGVvX211dGUiLCJyb29tLnNlbGYudmlkZW9fdW5tdXRlIiwicm9vbS5zZWxmLmRlYWYiLCJyb29tLnNlbGYudW5kZWFmIiwicm9vbS5tZW1iZXIuYXVkaW9fbXV0ZSIsInJvb20ubWVtYmVyLnNldF9pbnB1dF92b2x1bWUiLCJyb29tLm1lbWJlci5zZXRfb3V0cHV0X3ZvbHVtZSIsInJvb20ubWVtYmVyLnNldF9pbnB1dF9zZW5zaXRpdml0eSIsInJvb20uc2V0X2xheW91dCIsInJvb20uaGlkZV92aWRlb19tdXRlZCIsInJvb20uc2hvd192aWRlb19tdXRlZCJdLCJhY3IiOnRydWV9.IJzsPCqdnAFHHP2tFLIfzdCGzM2ieoWaR8XNlrMLis3yl1GBZOOP9c2KjBvE9QjpiinXFOQg7SHzQvPB0A7umg"
+  const TOKEN = "<JWT-HERE>"
 
   // useEffect(() => {
   //   Video.joinRoom({
