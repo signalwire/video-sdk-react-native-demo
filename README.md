@@ -10,7 +10,7 @@ npm install
 yarn
 ```
 
-Locate `node_modules/@signalwire/webrtc/dist/webrtc/srcRTCPeer.js` and update these methods:
+Locate `node_modules/@signalwire/webrtc/dist/webrtc/src/RTCPeer.js` and update these methods:
 
 ```diff
     _getSenderByKind(kind) {
