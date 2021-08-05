@@ -7,13 +7,17 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf node_modules/ && npm cache verify && npm install"
   },
   "dependencies": {
-    "@signalwire/js": "^3.0.0-beta.5",
+    "@signalwire/js": "^3.0.0-beta.6",
     "react": "17.0.1",
     "react-native": "0.64.2",
+    "react-native-elements": "^3.4.2",
     "react-native-get-random-values": "^1.7.0",
+    "react-native-safe-area-context": "^3.2.0",
+    "react-native-slider": "^0.11.0",
     "react-native-webrtc": "^1.89.3"
   },
   "devDependencies": {
