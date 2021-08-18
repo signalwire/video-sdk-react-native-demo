@@ -1,4 +1,4 @@
-package com.rnvideosdk;
+package com.videosdk;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "RNVideoSDK";
+    return "VideoSdk";
   }
 }

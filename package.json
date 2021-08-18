@@ -1,24 +1,22 @@
 {
-  "name": "rnvideosdk",
+  "name": "videosdk",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --device 'Iphone SE'",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
     "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf node_modules/ && npm cache verify && npm install"
   },
   "dependencies": {
-    "@signalwire/js": "^3.0.0-beta.6",
+    "@signalwire/js": "^3.1.0",
     "react": "17.0.1",
     "react-native": "0.64.2",
-    "react-native-elements": "^3.4.2",
     "react-native-get-random-values": "^1.7.0",
-    "react-native-safe-area-context": "^3.2.0",
-    "react-native-slider": "^0.11.0",
-    "react-native-webrtc": "^1.89.3"
+    "react-native-slider": "0.11.0",
+    "react-native-webrtc": "1.89.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
