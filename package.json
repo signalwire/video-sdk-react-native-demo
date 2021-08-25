@@ -15,6 +15,7 @@
     "react": "17.0.1",
     "react-native": "0.64.2",
     "react-native-get-random-values": "^1.7.0",
+    "react-native-incall-manager": "^3.3.0",
     "react-native-slider": "0.11.0",
     "react-native-webrtc": "1.89.3"
   },

@@ -5339,6 +5339,11 @@
   dependencies:
     "fast-base64-decode" "^1.0.0"
 
+"react-native-incall-manager@^3.3.0":
+  "integrity" "sha512-SvomgHUoKqVso/BGv02b4ndBqenlqYqW3pptZz5qHwteidKFNWI6ny+PPw5X55MdK0lyTbzBoiT3DwS06Qu0lg=="
+  "resolved" "https://registry.npmjs.org/react-native-incall-manager/-/react-native-incall-manager-3.3.0.tgz"
+  "version" "3.3.0"
+
 "react-native-slider@0.11.0":
   "integrity" "sha512-jV9K87eu9uWr0uJIyrSpBLnCKvVlOySC2wynq9TFCdV9oGgjt7Niq8Q1A8R8v+5GHsuBw/s8vEj1AAkkUi+u+w=="
   "resolved" "https://registry.npmjs.org/react-native-slider/-/react-native-slider-0.11.0.tgz"
@@ -5357,7 +5362,7 @@
     "prop-types" "^15.5.10"
     "uuid" "^3.3.2"
 
-"react-native@>=0.56", "react-native@>=0.60.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.2":
+"react-native@>=0.40.0", "react-native@>=0.56", "react-native@>=0.60.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.2":
   "integrity" "sha512-Ty/fFHld9DcYsFZujXYdeVjEhvSeQcwuTGXezyoOkxfiGEGrpL/uwUZvMzwShnU4zbbTKDu2PAm/uwuOittRGA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.64.2.tgz"
   "version" "0.64.2"

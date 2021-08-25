@@ -8,10 +8,9 @@ import 'react-native-get-random-values';
  */
 import React, {useState} from 'react';
 import {Video} from '@signalwire/js';
-import {RTCView, mediaDevices} from 'react-native-webrtc';
+import {RTCView} from 'react-native-webrtc';
 import Slider from 'react-native-slider';
-// import * as Progress from 'react-native-progress';
-// import InCallManager from 'react-native-incall-manager';
+import InCallManager from 'react-native-incall-manager';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {
@@ -19,14 +18,13 @@ import {
   Picker,
   StyleSheet,
   Button,
-  ProgressBarAndroid,
   Text,
-  useColorScheme,
   View,
   Modal,
   Image,
   TextInput,
   DeviceEventEmitter,
+  TouchableOpacity,
 } from 'react-native';
 
 const min = -4;
@@ -34,11 +32,9 @@ const max = 4;
 const step = 1;
 const gMin = 0;
 const gMax = 12;
-const TOKEN =
-  'eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Mjg2NzY4MTQsImp0aSI6ImRmYTlmZDFlLTY3YjgtNDk5Ni04NWRjLWZkYjNjZGM1MWVmMSIsInN1YiI6IjY0OWRjMDhlLTM1NTgtNGVmZS1hNTk4LTQ2YTk2NjE2NGI4MyIsInUiOiJaZWVzaGFuIiwiciI6InRlcyIsInMiOlsicm9vbS5zZXRfbGF5b3V0Iiwicm9vbS5zZWxmLmF1ZGlvX211dGUiLCJyb29tLnNlbGYuYXVkaW9fdW5tdXRlIiwicm9vbS5zZWxmLnZpZGVvX211dGUiLCJyb29tLnNlbGYudmlkZW9fdW5tdXRlIiwicm9vbS5zZWxmLmRlYWYiLCJyb29tLnNlbGYudW5kZWFmIiwicm9vbS5zZWxmLnNldF9pbnB1dF9zZW5zaXRpdml0eSIsInJvb20uc2VsZi5zZXRfaW5wdXRfdm9sdW1lIiwicm9vbS5zZWxmLnNldF9vdXRwdXRfdm9sdW1lIiwicm9vbS5oaWRlX3ZpZGVvX211dGVkIiwicm9vbS5zaG93X3ZpZGVvX211dGVkIl0sImFjciI6dHJ1ZX0.SfXfr1YFTES8bGlgZxcXNMAeo9zeS0k5TirTuCEpF5M43alyByKkXet0ic1iAd6AgXQUi3SWlsB0Yn4AwcJ9Tw';
+const TOKEN = '<JWT-TOKEN>';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
   const [stream, setStream] = useState(null);
 
   const [modal, setModalVisibility] = useState(true);
@@ -51,16 +47,19 @@ const App = () => {
   const [room, setRoomObj] = useState(null);
 
   const [name, onChangeName] = React.useState('John Smith');
-  const [roomName, onChangeRoomName] = React.useState('testZee');
+  const [roomName, onChangeRoomName] = React.useState('test');
 
   React.useEffect(() => {
-    // checkPermission();
-    // DeviceEventEmitter.addListener('Proximity', function (data) {
-    //   console.log('Proximity sensor data', data);
-    // });
-    // DeviceEventEmitter.addListener('WiredHeadset', function (data) {
-    //   console.log('WiredHeadset data', data);
-    // });
+    checkPermission();
+    DeviceEventEmitter.addListener('Proximity', function (data) {
+      console.log('Proximity sensor data', data);
+    });
+    DeviceEventEmitter.addListener('WiredHeadset', function (data) {
+      console.log('WiredHeadset data', data);
+    });
+    DeviceEventEmitter.addListener('onAudioFocusChange', function (data) {
+      console.log('onAudioFocusChange data', data);
+    });
   }, []);
 
   const start = () => {
@@ -70,7 +69,7 @@ const App = () => {
     })
       .then(room => {
         setRoomObj(room);
-        // InCallManager.start({media: 'audio'});
+        InCallManager.start({media: 'audio'});
         console.log('Room Object', room, room?.remoteStream?.toURL());
         room?.on('room.ended', params => {
           console.debug('>> DEMO room.ended', params);
@@ -100,6 +99,7 @@ const App = () => {
       stream.release();
       setStream(null);
       setRoomObj(null);
+      InCallManager.stop();
     }
   };
 
@@ -118,33 +118,24 @@ const App = () => {
     await room?.createScreenShareObject();
   };
 
-  // const createScreenShareObj = () => {
-  //   mediaDevices
-  //     .getDisplayMedia({video: true})
-  //     .then(stream => {
-  //       setStream(stream);
-  //       console.log('Succeeded to get screen!');
-  //     })
-  //     .catch(error => {
-  //       console.log('Failed to get screen!');
-  //       console.log(error);
-  //     });
-  // };
+  const checkPermission = async () => {
+    if (InCallManager.recordPermission !== 'granted') {
+      InCallManager.requestRecordPermission()
+        .then(requestedRecordPermissionResult => {
+          console.log(
+            'InCallManager.requestRecordPermission() requestedRecordPermissionResult: ',
+            requestedRecordPermissionResult,
+          );
+        })
+        .catch(err => {
+          console.log('InCallManager.requestRecordPermission() catch: ', err);
+        });
+    }
+  };
 
-  // const checkPermission = async () => {
-  //   if (InCallManager.recordPermission !== 'granted') {
-  //     InCallManager.requestRecordPermission()
-  //       .then(requestedRecordPermissionResult => {
-  //         console.log(
-  //           'InCallManager.requestRecordPermission() requestedRecordPermissionResult: ',
-  //           requestedRecordPermissionResult,
-  //         );
-  //       })
-  //       .catch(err => {
-  //         console.log('InCallManager.requestRecordPermission() catch: ', err);
-  //       });
-  //   }
-  // };
+  const setSpeakerOn = () => InCallManager.setForceSpeakerphoneOn(true);
+  const setSpeakerOf = () => InCallManager.setForceSpeakerphoneOn(false);
+
   return (
     <>
       <SafeAreaView style={styles.body}>
@@ -171,9 +162,11 @@ const App = () => {
               placeholder="Room's name"
               keyboardType="default"
             />
-            <View style={{marginHorizontal: 10}}>
-              <Button title="Join" onPress={checkAndProceed} />
-            </View>
+            <TouchableOpacity onPress={checkAndProceed}>
+              <View style={styles.buttonStyleBlue}>
+                <Text style={{color: 'white'}}>Join</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </Modal>
         {stream && <RTCView streamURL={stream.toURL()} style={styles.stream} />}
@@ -251,111 +244,80 @@ const App = () => {
           </View>
 
           <View style={styles.footer2}>
-            <View style={{marginVertical: 10, marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="Mute Self"
-                style={styles.button}
-                onPress={() => room?.audioMute()}
-              />
-            </View>
+            <TouchableOpacity onPress={() => room?.audioMute()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Mute Self</Text>
+              </View>
+            </TouchableOpacity>
 
-            <View style={{marginVertical: 10, marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="UnMute Self"
-                style={styles.button}
-                onPress={() => room?.audioUnmute()}
-              />
-            </View>
+            <TouchableOpacity onPress={() => room?.audioUnmute()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>UnMute Self</Text>
+              </View>
+            </TouchableOpacity>
 
-            <View style={{marginVertical: 10, marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="Deaf"
-                style={styles.button}
-                onPress={() => room?.deaf()}
-              />
-            </View>
+            <TouchableOpacity onPress={() => room?.deaf()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Deaf</Text>
+              </View>
+            </TouchableOpacity>
 
-            <View style={{marginVertical: 10, marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="UnDeaf"
-                style={styles.button}
-                onPress={() => room?.undeaf()}
-              />
-            </View>
+            <TouchableOpacity onPress={() => room?.undeaf()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>UnDeaf</Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.footer2}>
-            <View style={{marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="Video mute"
-                style={styles.button}
-                onPress={() => room?.videoMute()}
-              />
-            </View>
-            <View style={{marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="Video UnMute"
-                style={styles.button}
-                onPress={() => room?.videoUnmute()}
-              />
-            </View>
-            <View style={{marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="Hide"
-                style={styles.button}
-                onPress={() => room?.hideVideoMuted()}
-              />
-            </View>
-            <View style={{marginHorizontal: 5}}>
-              <Button
-                color="#ffc107"
-                title="Show"
-                style={styles.button}
-                onPress={() => room?.showVideoMuted()}
-              />
-            </View>
+            <TouchableOpacity onPress={() => room?.videoMute()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Video mute</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => room?.videoUnmute()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Video UnMute</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => room?.hideVideoMuted()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Hide</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => room?.showVideoMuted()}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Show</Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.footer2}>
-            <View style={{marginHorizontal: 5, marginVertical: 10}}>
-              <Button
-                color="#ffc107"
-                title="Screen share"
-                style={styles.button}
-                onPress={createScreenShareObj}
-              />
-            </View>
-            {/* <View style={{marginHorizontal: 5, marginVertical: 10}}>
-              <Button
-                color="#ffc107"
-                title="S"
-                style={styles.button}
-                pressed={() => InCallManager.setSpeakerphoneOn(true)}
-              />
-            </View>
-            <View style={{marginHorizontal: 5, marginVertical: 10}}>
-              <Button
-                color="#ffc107"
-                title="E"
-                style={styles.button}
-                pressed={() => InCallManager.setSpeakerphoneOn(false)}
-              />
-            </View>
+            <TouchableOpacity onPress={createScreenShareObj}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Screen share</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={setSpeakerOn}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Speaker</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={setSpeakerOf}>
+              <View style={styles.buttonStyle}>
+                <Text style={{color: 'white'}}>Earpiece</Text>
+              </View>
+            </TouchableOpacity>
             {headset && (
               <View style={{marginHorizontal: 5, marginVertical: 10}}>
                 <Button color="#ffc107" title="H" style={styles.button} />
               </View>
-            )} */}
+            )}
           </View>
-          <View style={{marginHorizontal: 5}}>
-            <Button title="Leave" color="red" onPress={leaveMeeting} />
-          </View>
+          <TouchableOpacity onPress={leaveMeeting}>
+            <View style={styles.buttonStyleRed}>
+              <Text style={{color: 'white'}}>Leave</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </>
@@ -413,6 +375,47 @@ const styles = StyleSheet.create({
     borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
     margin: 8,
+  },
+  buttonStyle: {
+    marginTop: 5,
+    marginStart: 8,
+    marginBottom: 5,
+    padding: 8,
+    backgroundColor: '#ffc107',
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.9,
+    shadowRadius: 3,
+    alignItems: 'center',
+    elevation: 3,
+  },
+  buttonStyleRed: {
+    marginTop: 5,
+    marginStart: 8,
+    marginBottom: 5,
+    marginEnd: 8,
+    padding: 8,
+    alignItems: 'center',
+    backgroundColor: 'red',
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.9,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  buttonStyleBlue: {
+    marginTop: 5,
+    marginStart: 8,
+    marginBottom: 5,
+    marginEnd: 8,
+    padding: 8,
+    alignItems: 'center',
+    backgroundColor: 'dodgerblue',
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.9,
+    shadowRadius: 3,
+    elevation: 3,
   },
   mediumText: {
     color: 'black',
