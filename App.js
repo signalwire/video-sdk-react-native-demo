@@ -11,20 +11,19 @@ import {Video} from '@signalwire/js';
 import {RTCView} from 'react-native-webrtc';
 import Slider from 'react-native-slider';
 import InCallManager from 'react-native-incall-manager';
+import styles from './styles';
+import Button from './button';
+import MyPicker from './picker';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {
   SafeAreaView,
   Picker,
-  StyleSheet,
-  Button,
   Text,
   View,
   Modal,
   Image,
   TextInput,
   DeviceEventEmitter,
-  TouchableOpacity,
 } from 'react-native';
 
 const min = -4;
@@ -32,15 +31,13 @@ const max = 4;
 const step = 1;
 const gMin = 0;
 const gMax = 12;
-const TOKEN = '<JWT-TOKEN>';
+const TOKEN =
+  'eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Mjg2NzY4MTQsImp0aSI6ImRmYTlmZDFlLTY3YjgtNDk5Ni04NWRjLWZkYjNjZGM1MWVmMSIsInN1YiI6IjY0OWRjMDhlLTM1NTgtNGVmZS1hNTk4LTQ2YTk2NjE2NGI4MyIsInUiOiJaZWVzaGFuIiwiciI6InRlcyIsInMiOlsicm9vbS5zZXRfbGF5b3V0Iiwicm9vbS5zZWxmLmF1ZGlvX211dGUiLCJyb29tLnNlbGYuYXVkaW9fdW5tdXRlIiwicm9vbS5zZWxmLnZpZGVvX211dGUiLCJyb29tLnNlbGYudmlkZW9fdW5tdXRlIiwicm9vbS5zZWxmLmRlYWYiLCJyb29tLnNlbGYudW5kZWFmIiwicm9vbS5zZWxmLnNldF9pbnB1dF9zZW5zaXRpdml0eSIsInJvb20uc2VsZi5zZXRfaW5wdXRfdm9sdW1lIiwicm9vbS5zZWxmLnNldF9vdXRwdXRfdm9sdW1lIiwicm9vbS5oaWRlX3ZpZGVvX211dGVkIiwicm9vbS5zaG93X3ZpZGVvX211dGVkIl0sImFjciI6dHJ1ZX0.SfXfr1YFTES8bGlgZxcXNMAeo9zeS0k5TirTuCEpF5M43alyByKkXet0ic1iAd6AgXQUi3SWlsB0Yn4AwcJ9Tw';
 
 const App = () => {
   const [stream, setStream] = useState(null);
 
   const [modal, setModalVisibility] = useState(true);
-  const [progressBar, setProgressBarVisibility] = useState(false);
-  const [headset, setHeadsetVisibility] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('2x1');
   const [mVolume, setMVolume] = useState(0);
   const [sVolume, setSVolume] = useState(0);
   const [nGate, setNGate] = useState(6);
@@ -83,7 +80,6 @@ const App = () => {
           .then(room2 => {
             console.log('Room Joined');
             setStream(room?.remoteStream);
-            setProgressBarVisibility(false);
             setModalVisibility(false);
           })
           .catch(error => {
@@ -94,6 +90,7 @@ const App = () => {
         console.error('Error', error);
       });
   };
+
   const stop = () => {
     if (stream) {
       stream.release();
@@ -101,11 +98,6 @@ const App = () => {
       setRoomObj(null);
       InCallManager.stop();
     }
-  };
-
-  const checkAndProceed = () => {
-    setProgressBarVisibility(true);
-    start();
   };
 
   const leaveMeeting = () => {
@@ -139,6 +131,7 @@ const App = () => {
   return (
     <>
       <SafeAreaView style={styles.body}>
+        {/* Login */}
         <Modal visible={modal}>
           <View style={styles.body2}>
             <Image
@@ -146,7 +139,6 @@ const App = () => {
               source={require('./assets/sw_logo.png')}
             />
             <Text style={styles.titleText}>Video Demo</Text>
-            {/* {progressBar && <Progress.Circle size={30} indeterminate={true} />} */}
             <TextInput
               style={styles.input}
               onChangeText={onChangeName}
@@ -162,41 +154,26 @@ const App = () => {
               placeholder="Room's name"
               keyboardType="default"
             />
-            <TouchableOpacity onPress={checkAndProceed}>
-              <View style={styles.buttonStyleBlue}>
-                <Text style={{color: 'white'}}>Join</Text>
-              </View>
-            </TouchableOpacity>
+
+            <Button
+              style={styles.buttonStyleBlue}
+              onTap={start}
+              titleText="Join"
+            />
           </View>
         </Modal>
+
+        {/* Main */}
         {stream && <RTCView streamURL={stream.toURL()} style={styles.stream} />}
         <View style={styles.footer}>
           <View style={styles.container}>
-            <Picker
-              selectedValue={selectedValue}
-              style={{height: 50}}
+            <MyPicker
               onValueChange={(itemValue, itemIndex) => {
-                setSelectedValue(itemValue);
-                if (itemValue != '0') {
+                if (itemValue !== '0') {
                   room?.setLayout({name: itemValue});
                 }
-              }}>
-              <Picker.Item label="Change Layout" value="0" />
-              <Picker.Item label="8x8" value="8x8" />
-              <Picker.Item label="2x1" value="2x1" />
-              <Picker.Item label="1x1" value="1x1" />
-              <Picker.Item label="5up" value="5up" />
-              <Picker.Item label="5x5" value="5x5" />
-              <Picker.Item label="4x4" value="4x4" />
-              <Picker.Item label="10x10" value="10x10" />
-              <Picker.Item label="2x2" value="2x2" />
-              <Picker.Item label="6x6" value="6x6" />
-              <Picker.Item label="grid-responsive" value="grid-responsive" />
-              <Picker.Item
-                label="highlight-1-responsive"
-                value="highlight-1-responsive"
-              />
-            </Picker>
+              }}
+            />
           </View>
           <View style={styles.slider}>
             <Text style={styles.mediumText}>Microphone Volume</Text>
@@ -244,201 +221,83 @@ const App = () => {
           </View>
 
           <View style={styles.footer2}>
-            <TouchableOpacity onPress={() => room?.audioMute()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Mute Self</Text>
-              </View>
-            </TouchableOpacity>
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.audioMute()}
+              titleText="Mute Self"
+            />
 
-            <TouchableOpacity onPress={() => room?.audioUnmute()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>UnMute Self</Text>
-              </View>
-            </TouchableOpacity>
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.audioUnmute()}
+              titleText="UnMute Self"
+            />
 
-            <TouchableOpacity onPress={() => room?.deaf()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Deaf</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => room?.undeaf()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>UnDeaf</Text>
-              </View>
-            </TouchableOpacity>
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.deaf()}
+              titleText="Deaf"
+            />
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.undeaf()}
+              titleText="UnDeaf"
+            />
           </View>
 
           <View style={styles.footer2}>
-            <TouchableOpacity onPress={() => room?.videoMute()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Video mute</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => room?.videoUnmute()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Video UnMute</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => room?.hideVideoMuted()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Hide</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => room?.showVideoMuted()}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Show</Text>
-              </View>
-            </TouchableOpacity>
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.videoMute()}
+              titleText="Video mute"
+            />
+
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.videoUnmute()}
+              titleText="Video UnMute"
+            />
+
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.hideVideoMuted()}
+              titleText="Hide"
+            />
+            <Button
+              style={styles.buttonStyle}
+              onTap={() => room?.showVideoMuted()}
+              titleText="Show"
+            />
           </View>
           <View style={styles.footer2}>
-            <TouchableOpacity onPress={createScreenShareObj}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Screen share</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={setSpeakerOn}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Speaker</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={setSpeakerOf}>
-              <View style={styles.buttonStyle}>
-                <Text style={{color: 'white'}}>Earpiece</Text>
-              </View>
-            </TouchableOpacity>
-            {headset && (
-              <View style={{marginHorizontal: 5, marginVertical: 10}}>
-                <Button color="#ffc107" title="H" style={styles.button} />
-              </View>
-            )}
+            <Button
+              style={styles.buttonStyle}
+              onTap={createScreenShareObj}
+              titleText="Screen share"
+            />
+
+            <Button
+              style={styles.buttonStyle}
+              onTap={setSpeakerOn}
+              titleText="Speaker"
+            />
+
+            <Button
+              style={styles.buttonStyle}
+              onTap={setSpeakerOf}
+              titleText="Earpiece"
+            />
           </View>
-          <TouchableOpacity onPress={leaveMeeting}>
-            <View style={styles.buttonStyleRed}>
-              <Text style={{color: 'white'}}>Leave</Text>
-            </View>
-          </TouchableOpacity>
+
+          <Button
+            style={styles.buttonStyleRed}
+            onTap={leaveMeeting}
+            titleText="Leave"
+          />
         </View>
       </SafeAreaView>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  body: {
-    justifyContent: 'center',
-    backgroundColor: Colors.white,
-    ...StyleSheet.absoluteFill,
-  },
-  body2: {
-    justifyContent: 'center',
-    backgroundColor: Colors.white,
-    ...StyleSheet.absoluteFill,
-  },
-  stream: {
-    marginVertical: 10,
-    top: 0,
-    position: 'absolute',
-    height: '30%',
-    width: '100%',
-  },
-  footer: {
-    backgroundColor: Colors.lighter,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  footer2: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: Colors.lighter,
-  },
-  button: {
-    alignSelf: 'center',
-    borderBottomColor: '#737373',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    margin: 8,
-  },
-  buttonStyle: {
-    marginTop: 5,
-    marginStart: 8,
-    marginBottom: 5,
-    padding: 8,
-    backgroundColor: '#ffc107',
-    shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.9,
-    shadowRadius: 3,
-    alignItems: 'center',
-    elevation: 3,
-  },
-  buttonStyleRed: {
-    marginTop: 5,
-    marginStart: 8,
-    marginBottom: 5,
-    marginEnd: 8,
-    padding: 8,
-    alignItems: 'center',
-    backgroundColor: 'red',
-    shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.9,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  buttonStyleBlue: {
-    marginTop: 5,
-    marginStart: 8,
-    marginBottom: 5,
-    marginEnd: 8,
-    padding: 8,
-    alignItems: 'center',
-    backgroundColor: 'dodgerblue',
-    shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.9,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  mediumText: {
-    color: 'black',
-    flex: 1,
-  },
-  titleText: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: 'black',
-    flex: 1,
-  },
-  slider: {
-    backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-  logo: {width: '100%', height: '13%', resizeMode: 'stretch'},
-});
 
 export default App;
