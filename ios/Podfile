@@ -9,7 +9,7 @@ target 'BroadCastExtension' do
   #use_frameworks!
 
   # Pods for Broadcast Extension
-
+  pod 'BroadcastPod', '~> 1.0.1'
 end
 target 'VideoSdk' do
   config = use_native_modules!

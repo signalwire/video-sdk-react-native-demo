@@ -66,16 +66,24 @@ The `Broadcast Upload Extension` is one of the App Extensions types defined in i
 
 For creating the extension you need to add a new target to your application, selecting the `Broadcast Upload Extension` template. Fill in the desired name, change the language to Swift, make sure `Include UI Extension` is not selected, as we don't need custom UI for our case, then press Finish (screenshot 1). You will see that a new folder with the extension's name was added to the project's tree, containing the `SampleHandler.swift` class.
 
-With the extension created the next steps are to set up the socket connection, add the functionality for handling the received frames, and send them to RN WebRTC for processing. We will be using the code provided with the sample project for this. Copy `SampleUploader.swift`, `SocketConnection.swift`, `DarwinNotificationCenter.swift`, and `Atomic.swift` files to your extension's folder and make sure they're added to the target.
+With the extension created the next steps are to set up the socket connection, add the functionality for handling the received frames, and send them to RN WebRTC for processing. We will be using the code provided with the sample project for this. Copy `SampleUploader.swift` file to your extension's folder and make sure they're added to the target.
 
 #### TL;DR
 
 - Add a `Broadcast Upload Extension`, without UI, to your app.
-- Copy `SampleUploader.swift`, `SocketConnection.swift`, `DarwinNotificationCenter.swift` and `Atomic.swift` files from the sample project to your extension. Make sure they are added to the extension's target.
+- Copy `SampleHandler.swift` file from the sample project to your extension. Make sure it is added to the extension's target.
 - Add both the app and the extension to the same App Group. Next, add the app group id value to the app's `Info.plist` for the `RTCAppGroupIdentifier` key.
 - Add a new key `RTCScreenSharingExtension` to the app's `Info.plist` with the extension's Bundle Identifier as the value.
 - Update `SampleHandler.swift` with the code from the sample project. Update `appGroupIdentifier` constant with the App Group name your app and extension are both registered to.
 - Make sure `voip` is added to `UIBackgroundModes`, in the app's `Info.playlist`, in order to work when the app is in the background.
+- Make sure to add `BroadcastPod` to your `Broadcast Upload Extension` target as shown below.
+
+```
+target 'BroadCastExtension' do
+   # Pods for Broadcast Extension
+  pod 'BroadcastPod', '~> 1.0.2'
+end
+```
 
 > Note: If you can't find screen record button into your iPhone follow this [`link`][ssguide]
 

@@ -1,5 +1,6 @@
 PODS:
   - boost-for-react-native (1.63.0)
+  - BroadcastPod (1.0.1)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.64.2)
@@ -327,6 +328,7 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - BroadcastPod (~> 1.0.1)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -383,6 +385,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - BroadcastPod
     - CocoaAsyncSocket
     - Flipper
     - Flipper-DoubleConversion
@@ -461,6 +464,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  BroadcastPod: 62b4afde26b755913ebaeeada7aca282dc612cd8
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
@@ -504,6 +508,6 @@ SPEC CHECKSUMS:
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: ec2d3986899e011754350db64fe0cacbf99f1c95
+PODFILE CHECKSUM: d68fa57a2b5210487d64a6a6fc3b5282427790fa
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2
