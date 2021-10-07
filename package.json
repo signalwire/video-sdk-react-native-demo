@@ -11,13 +11,14 @@
     "clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf node_modules/ && npm cache verify && npm install"
   },
   "dependencies": {
-    "@signalwire/js": "^3.1.0",
-    "react": "17.0.1",
-    "react-native": "0.64.2",
+    "@react-native-picker/picker": "^2.1.0",
+    "@signalwire/js": "^3.3.0",
+    "axios": "^0.22.0",
+    "react": "17.0.2",
+    "react-native": "0.66.0",
     "react-native-get-random-values": "^1.7.0",
     "react-native-incall-manager": "^3.3.0",
-    "react-native-slider": "0.11.0",
-    "react-native-webrtc": "1.89.3"
+    "react-native-webrtc": "^1.92.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

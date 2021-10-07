@@ -7,9 +7,9 @@ import 'react-native-get-random-values';
  * @flow strict-local
  */
 import React, {useState} from 'react';
+import axios from "axios"
 import {Video} from '@signalwire/js';
 import {RTCView} from 'react-native-webrtc';
-import Slider from 'react-native-slider';
 import InCallManager from 'react-native-incall-manager';
 import styles from './styles';
 import Button from './button';
@@ -17,7 +17,6 @@ import MyPicker from './picker';
 
 import {
   SafeAreaView,
-  Picker,
   Text,
   View,
   Modal,
@@ -26,23 +25,16 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-const min = -4;
-const max = 4;
-const step = 1;
-const gMin = 0;
-const gMax = 12;
-const TOKEN = '<JWT-Token>';
+const SERVER_URL = 'https://6i94n.sse.codesandbox.io';
 
 const App = () => {
   const [stream, setStream] = useState(null);
 
   const [modal, setModalVisibility] = useState(true);
-  const [mVolume, setMVolume] = useState(0);
-  const [sVolume, setSVolume] = useState(0);
-  const [nGate, setNGate] = useState(6);
+  const [joinEnabled, setJoinEnabled] = useState(true);
   const [room, setRoomObj] = useState(null);
 
-  const [name, onChangeName] = React.useState('John Smith');
+  const [name, onChangeName] = React.useState('guest');
   const [roomName, onChangeRoomName] = React.useState('test');
 
   React.useEffect(() => {
@@ -58,36 +50,46 @@ const App = () => {
     });
   }, []);
 
-  const start = () => {
-    Video.createRoomObject({
-      host: 'relay.signalwire.com',
-      token: TOKEN,
-    })
-      .then(room => {
-        setRoomObj(room);
-        InCallManager.start({media: 'audio'});
-        console.log('Room Object', room, room?.remoteStream?.toURL());
-        room?.on('room.ended', params => {
-          console.debug('>> DEMO room.ended', params);
-        });
+  const start = async () => {
+    if (!joinEnabled) return
+    setJoinEnabled(false)
 
-        room?.on('room.joined', params => {
-          console.debug('>> DEMO room.joined', params);
-        });
-        room
-          ?.join()
-          .then(room2 => {
-            console.log('Room Joined');
-            setStream(room?.remoteStream);
-            setModalVisibility(false);
-          })
-          .catch(error => {
-            console.error('Error', error);
-          });
-      })
-      .catch(error => {
-        console.error('Error', error);
-      });
+    // Get token
+    const response = await axios.post(`${SERVER_URL}/get_token`, {
+      user_name: name,
+      room_name: roomName,
+      mod: false,
+    });
+    const token = response.data.token;
+
+    const room = new Video.RoomSession({
+      token: token,
+      logLevel: 'silent'
+    })
+    setRoomObj(room);
+
+    InCallManager.start({media: 'audio'});
+
+    room.on('room.ended', params => {
+      console.debug('>> DEMO room.ended', params);
+    });
+
+    room.on('room.joined', params => {
+      console.debug('>> DEMO room.joined', params);
+
+      setStream(room.remoteStream);
+      console.log(room)
+      console.log("Remote stream:", room.remoteStream.toURL())
+      setModalVisibility(false);
+      setJoinEnabled(true);
+    });
+
+    try {
+      await room.join()
+      console.log('Room Joined');
+    } catch (error) {
+      console.error('Error', error);
+    }
   };
 
   const stop = () => {
@@ -99,14 +101,17 @@ const App = () => {
     }
   };
 
-  const leaveMeeting = () => {
-    room?.hangup();
+  const leaveMeeting = async () => {
+    try {
+      await room?.leave();
+    } catch (e) { }
     stop();
     setModalVisibility(true);
+    setJoinEnabled(true);
   };
 
-  const createScreenShareObj = async () => {
-    await room?.createScreenShareObject();
+  const startScreenShare = async () => {
+    await room?.startScreenShare();
   };
 
   const checkPermission = async () => {
@@ -125,7 +130,7 @@ const App = () => {
   };
 
   const setSpeakerOn = () => InCallManager.setForceSpeakerphoneOn(true);
-  const setSpeakerOf = () => InCallManager.setForceSpeakerphoneOn(false);
+  const setSpeakerOff = () => InCallManager.setForceSpeakerphoneOn(false);
 
   return (
     <>
@@ -157,8 +162,10 @@ const App = () => {
             <Button
               style={styles.buttonStyleBlue}
               onTap={start}
-              titleText="Join"
+              titleText={joinEnabled ? 'Join' : 'Loading...'}
+              disabled={!joinEnabled}
             />
+            <View style={{flex: 1}}></View>
           </View>
         </Modal>
 
@@ -171,50 +178,6 @@ const App = () => {
                 if (itemValue !== '0') {
                   room?.setLayout({name: itemValue});
                 }
-              }}
-            />
-          </View>
-          <View style={styles.slider}>
-            <Text style={styles.mediumText}>Microphone Volume</Text>
-            <Slider
-              minimumValue={min}
-              maximumValue={max}
-              step={step}
-              value={mVolume}
-              onValueChange={value => {
-                console.log({value});
-                setMVolume(value);
-                room?.setMicrophoneVolume({volume: value});
-              }}
-            />
-          </View>
-
-          <View style={styles.slider}>
-            <Text style={styles.mediumText}>Speaker Volume</Text>
-            <Slider
-              minimumValue={min}
-              maximumValue={max}
-              step={step}
-              value={sVolume}
-              onValueChange={value => {
-                console.log({value});
-                setSVolume(value);
-                room?.setSpeakerVolume({volume: value});
-              }}
-            />
-          </View>
-
-          <View style={styles.slider}>
-            <Text style={styles.mediumText}>Noise Gate</Text>
-            <Slider
-              minimumValue={gMin}
-              maximumValue={gMax}
-              step={step}
-              value={nGate}
-              onValueChange={value => {
-                console.log({value});
-                setNGate(value);
-                room?.setInputSensitivity({value: value});
               }}
             />
           </View>
@@ -271,7 +234,7 @@ const App = () => {
           <View style={styles.footer2}>
             <Button
               style={styles.buttonStyle}
-              onTap={createScreenShareObj}
+              onTap={startScreenShare}
               titleText="Screen share"
             />
 
@@ -283,7 +246,7 @@ const App = () => {
 
             <Button
               style={styles.buttonStyle}
-              onTap={setSpeakerOf}
+              onTap={setSpeakerOff}
               titleText="Earpiece"
             />
           </View>

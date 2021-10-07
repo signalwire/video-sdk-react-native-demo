@@ -1,5 +1,5 @@
 import React from 'react';
-import {Picker} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 export default class MyPicker extends React.Component {
   constructor(props) {
     super(props);
