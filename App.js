@@ -25,7 +25,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-const SERVER_URL = 'https://6i94n.sse.codesandbox.io';
+const SERVER_URL = '...';
 
 const App = () => {
   const [stream, setStream] = useState(null);
