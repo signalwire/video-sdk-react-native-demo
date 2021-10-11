@@ -25,7 +25,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-const TOKEN = "..."
+const TOKEN = "<VideoRoomToken>"
 
 const App = () => {
   const [stream, setStream] = useState(null);
