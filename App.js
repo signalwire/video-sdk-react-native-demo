@@ -25,7 +25,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-const SERVER_URL = '...';
+const TOKEN = "..."
 
 const App = () => {
   const [stream, setStream] = useState(null);
@@ -54,13 +54,17 @@ const App = () => {
     if (!joinEnabled) return
     setJoinEnabled(false)
 
-    // Get token
+    // Get token from a remote server
+    /*
+    const SERVER_URL = '...';
     const response = await axios.post(`${SERVER_URL}/get_token`, {
       user_name: name,
       room_name: roomName,
       mod: false,
     });
     const token = response.data.token;
+    */
+    const token = TOKEN
 
     const room = new Video.RoomSession({
       token: token,

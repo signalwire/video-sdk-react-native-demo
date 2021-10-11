@@ -8,11 +8,7 @@ This example demonstrate the use of [`@signalwire/js`](https://www.npmjs.com/pac
 - Mute/Unmute
 - Video mute/unmute
 - Deaf/Undeaf self
-- Hide/Show vMuted
-- Change layout
-- Set microphone volume
-- Set speaker volume
-- Set noise gate
+- Hide/Show muted videos
 - Screenshare
 
 This example is ready to use. Follow below steps to get it working.
@@ -20,7 +16,7 @@ However if you want to setup everything into your existing application jump to `
 
 - Checkout
 - [Generate JWT Token]
-  > Note: While generating token you can add other [Permissions], apart from deafault permissions
+  > Note: While generating token you can add other [Permissions], apart from default permissions
 - Replace that token in the `App.js`
 - Run below commands
 
