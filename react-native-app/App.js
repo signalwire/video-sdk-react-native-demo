@@ -6,10 +6,10 @@ import 'react-native-get-random-values';
  * @format
  * @flow strict-local
  */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import axios from "axios"
-import {Video} from '@signalwire/js';
-import {RTCView} from 'react-native-webrtc';
+import { Video } from '@signalwire/js';
+import { RTCView } from 'react-native-webrtc';
 import InCallManager from 'react-native-incall-manager';
 import styles from './styles';
 import Button from './button';
@@ -83,7 +83,7 @@ const App = () => {
     })
     setRoomObj(room);
 
-    InCallManager.start({media: 'audio'});
+    InCallManager.start({ media: 'audio' });
 
     room.on('room.ended', params => {
       console.debug('>> DEMO room.ended', params);
@@ -180,7 +180,7 @@ const App = () => {
               titleText={joinEnabled ? 'Join' : 'Loading...'}
               disabled={!joinEnabled}
             />
-            <View style={{flex: 1}}></View>
+            <View style={{ flex: 1 }}></View>
           </View>
         </Modal>
 
@@ -191,7 +191,7 @@ const App = () => {
             <MyPicker
               onValueChange={(itemValue, itemIndex) => {
                 if (itemValue !== '0') {
-                  room?.setLayout({name: itemValue});
+                  room?.setLayout({ name: itemValue });
                 }
               }}
             />
