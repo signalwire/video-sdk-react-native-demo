@@ -21,7 +21,7 @@ However if you want to setup everything into your existing application jump to `
 - Run below commands
 
 ```sh
-cd video-sdk-react-native-demo
+cd react-native-app
 npm i
 cd ios && pod install
 

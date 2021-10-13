@@ -25,19 +25,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-/*
-   Getting a token with curl:
-  
-     curl --request POST \
-       --url 'https://your_space_id.signalwire.com/api/video/room_tokens' \
-       --user 'project_id:api_token' \
-       --header 'Content-Type: application/json' \
-       --data '{"user_name": "john", "room_name": "office", "permissions": ["room.self.audio_mute", "room.self.audio_unmute", "room.self.video_mute", "room.self.video_unmute", "room.self.deaf", "room.self.undeaf", "room.hide_video_muted", "room.show_video_muted", "room.set_layout"]}'
-   
-   Remember to replace `your_space_id`, `project_id`, `api_token`.
- */
-const TOKEN = "<VideoRoomToken>"
-
 const App = () => {
   const [stream, setStream] = useState(null);
 
@@ -66,16 +53,25 @@ const App = () => {
     setJoinEnabled(false)
 
     // Get token from a remote server
-    /*
-    const SERVER_URL = '...';
+    const SERVER_URL = 'http://localhost:8080';
     const response = await axios.post(`${SERVER_URL}/get_token`, {
       user_name: name,
       room_name: roomName,
-      mod: false,
     });
     const token = response.data.token;
+
+    /*
+      Alternatively, for the purposes of the demo you can get a token with curl:
+
+        curl --request POST \
+          --url 'https://your_space_id.signalwire.com/api/video/room_tokens' \
+          --user 'project_id:api_token' \
+          --header 'Content-Type: application/json' \
+          --data '{"user_name": "john", "room_name": "office", "permissions": ["room.self.audio_mute", "room.self.audio_unmute", "room.self.video_mute", "room.self.video_unmute", "room.self.deaf", "room.self.undeaf", "room.hide_video_muted", "room.show_video_muted", "room.set_layout"]}'
+
+      Remember to replace `your_space_id`, `project_id`, `api_token`.
     */
-    const token = TOKEN
+    // const token = '<YourRoomToken>'
 
     const room = new Video.RoomSession({
       token: token,
