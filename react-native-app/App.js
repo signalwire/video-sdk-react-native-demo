@@ -25,6 +25,8 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
+const SERVER_URL = 'http://localhost:8080';
+
 const App = () => {
   const [stream, setStream] = useState(null);
 
@@ -53,12 +55,20 @@ const App = () => {
     setJoinEnabled(false)
 
     // Get token from a remote server
-    const SERVER_URL = 'http://localhost:8080';
-    const response = await axios.post(`${SERVER_URL}/get_token`, {
-      user_name: name,
-      room_name: roomName,
-    });
-    const token = response.data.token;
+    let token
+    try {
+      const response = await axios.post(`${SERVER_URL}/get_token`, {
+        user_name: name,
+        room_name: roomName,
+      });
+      token = response.data.token;
+    } catch (e) {
+      console.error("There was an error obtaing the Room Token. Make sure " +
+                    "that you have started the server, and that the correct " +
+                    "SERVER_URL is configured in `react-native-app/App.js`.")
+      setJoinEnabled(true)
+      return
+    }
 
     /*
       Alternatively, for the purposes of the demo you can get a token with curl:

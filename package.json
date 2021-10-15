@@ -1,0 +1,22 @@
+{
+  "name": "video-sdk-react-native-demo",
+  "version": "1.0.0",
+  "description": "This example demonstrate the use of [`@signalwire/js`](https://www.npmjs.com/package/@signalwire/js) with react-native application.",
+  "scripts": {
+    "prepare": "(cd backend && npm install) && (cd react-native-app && npm install)",
+    "backend": "(cd backend && npm run start)",
+    "ios": "(cd react-native-app && npm run ios)",
+    "android": "(cd react-native-app && npm run android)",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/signalwire/video-sdk-react-native-demo.git"
+  },
+  "author": "SignalWire",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/signalwire/video-sdk-react-native-demo/issues"
+  },
+  "homepage": "https://github.com/signalwire/video-sdk-react-native-demo#readme"
+}
