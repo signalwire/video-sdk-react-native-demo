@@ -9,28 +9,29 @@ This example demonstrate the use of [`@signalwire/js`](https://www.npmjs.com/pac
 - Video mute/unmute
 - Deaf/Undeaf self
 - Hide/Show muted videos
-- Screenshare
 
-This example is ready to use. Follow below steps to get it working.
-However if you want to setup everything into your existing application jump to `Setup Guide` section.
+Screen-sharing does not currently work.
 
-- Checkout
-- [Generate JWT Token]
-  > Note: While generating token you can add other [Permissions], apart from default permissions
-- Replace that token in the `App.js`
-- Run below commands
+To try the example, follow the Getting Started section. If instead you'd like to setup the video SDK into your existing application, jump to the Setup Guide section. In any case, you can find step by step instructions at https://developer.signalwire.com/apis/docs/video-api-in-react-native.
 
-```sh
-cd react-native-app
-npm i
-cd ios && pod install
 
-cd .. && npm run android
-or
-cd .. && npm run ios
-```
+# Getting Started
+
+This repository includes the react-native example app, and a backend server that you can use to generate Room Tokens. To get started:
+
+ 1. Clone the repo
+ 2. Install dependencies
+    - `npm install`
+    - `cd react-native-app/ios && pod install`
+ 3. Configure the server (config file at [backend/.env](backend/.env))
+ 4. Start the server (`npm run backend`)
+ 5. Start the app (`npm run ios` or `npm run android`)
+
+The URL of the backend server is configured in [react-native-app/App.js](react-native-app/App.js). If you are running the application from a physical device, you may need to update it with the IP address on which the backend is listening (e.g., the one of your computer).
 
 # Setup Guide
+
+Note: this is not needed for running the demo app included in this repo.
 
 #### Requirements
 
@@ -38,7 +39,7 @@ cd .. && npm run ios
 - [Node.js](https://nodejs.org/) 14+
 - Tested with [react-native](https://github.com/facebook/react-native/releases/tag/v0.64.0) v.0.64
 - Tested with IOS Deployment target 12.1
-- Tested with Android minSdkVersion 21
+- Tested with Android minSdkVersion 24
 
 #### Installation packages
 
@@ -51,7 +52,7 @@ cd .. && npm run ios
 
 Refer to the README of each package for further details.
 
-#### Screen Share Integration
+#### Screen Share Integration (experimental)
 
 - Android screen sharing works by default
 - However for ios `Broadcast Upload Extension` is used
@@ -83,6 +84,6 @@ end
 
 > Note: If you can't find screen record button into your iPhone follow this [`link`][ssguide]
 
-[permissions]: https://developer.signalwire.com/apis/reference/video_room_permissions
+[permissions]: https://developer.signalwire.com/apis/reference/video_permissions
 [generate jwt token]: https://codesandbox.io/s/lingering-glitter-r8bxl
 [ssguide]: https://support.logmeininc.com/joinme/help/sharing-your-screen-on-ipad-or-iphone-joinme-t-joinme-share-ios
