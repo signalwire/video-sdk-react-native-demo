@@ -14,7 +14,7 @@ import InCallManager from 'react-native-incall-manager';
 import styles from './styles';
 import Button from './button';
 import MyPicker from './picker';
-
+import {NativeModules, Platform} from 'react-native';
 import {
   SafeAreaView,
   Picker,
@@ -31,9 +31,12 @@ const max = 4;
 const step = 1;
 const gMin = 0;
 const gMax = 12;
-const TOKEN = '<JWT-Token>';
+const TOKEN =
+  'eyJ0eXAiOiJWUlQiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Mjg2NzY4MTQsImp0aSI6ImRmYTlmZDFlLTY3YjgtNDk5Ni04NWRjLWZkYjNjZGM1MWVmMSIsInN1YiI6IjY0OWRjMDhlLTM1NTgtNGVmZS1hNTk4LTQ2YTk2NjE2NGI4MyIsInUiOiJaZWVzaGFuIiwiciI6InRlcyIsInMiOlsicm9vbS5zZXRfbGF5b3V0Iiwicm9vbS5zZWxmLmF1ZGlvX211dGUiLCJyb29tLnNlbGYuYXVkaW9fdW5tdXRlIiwicm9vbS5zZWxmLnZpZGVvX211dGUiLCJyb29tLnNlbGYudmlkZW9fdW5tdXRlIiwicm9vbS5zZWxmLmRlYWYiLCJyb29tLnNlbGYudW5kZWFmIiwicm9vbS5zZWxmLnNldF9pbnB1dF9zZW5zaXRpdml0eSIsInJvb20uc2VsZi5zZXRfaW5wdXRfdm9sdW1lIiwicm9vbS5zZWxmLnNldF9vdXRwdXRfdm9sdW1lIiwicm9vbS5oaWRlX3ZpZGVvX211dGVkIiwicm9vbS5zaG93X3ZpZGVvX211dGVkIl0sImFjciI6dHJ1ZX0.SfXfr1YFTES8bGlgZxcXNMAeo9zeS0k5TirTuCEpF5M43alyByKkXet0ic1iAd6AgXQUi3SWlsB0Yn4AwcJ9Tw';
 
 const App = () => {
+  const {InteractionModule} = NativeModules;
+
   const [stream, setStream] = useState(null);
 
   const [modal, setModalVisibility] = useState(true);
@@ -106,6 +109,9 @@ const App = () => {
   };
 
   const createScreenShareObj = async () => {
+    if (Platform.OS === 'android') {
+      InteractionModule.launch();
+    }
     await room?.createScreenShareObject();
   };
 
