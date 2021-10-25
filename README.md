@@ -8,33 +8,29 @@ This example demonstrate the use of [`@signalwire/js`](https://www.npmjs.com/pac
 - Mute/Unmute
 - Video mute/unmute
 - Deaf/Undeaf self
-- Hide/Show vMuted
-- Change layout
-- Set microphone volume
-- Set speaker volume
-- Set noise gate
-- Screenshare
+- Hide/Show muted videos
 
-This example is ready to use. Follow below steps to get it working.
-However if you want to setup everything into your existing application jump to `Setup Guide` section.
+Screen-sharing does not currently work.
 
-- Checkout
-- [Generate JWT Token]
-  > Note: While generating token you can add other [Permissions], apart from deafault permissions
-- Replace that token in the `App.js`
-- Run below commands
+To try the example, follow the Getting Started section. If instead you'd like to setup the video SDK into your existing application, jump to the Setup Guide section. In any case, you can find step by step instructions at https://developer.signalwire.com/apis/docs/video-api-in-react-native.
 
-```sh
-cd video-sdk-react-native-demo
-npm i
-cd ios && pod install
+# Getting Started
 
-cd .. && npm run android
-or
-cd .. && npm run ios
-```
+This repository includes the react-native example app, and a backend server that you can use to generate Room Tokens. To get started:
+
+1.  Clone the repo
+2.  Install dependencies
+    - `npm install`
+    - `cd react-native-app/ios && pod install`
+3.  Configure the server (config file at [backend/.env](backend/.env))
+4.  Start the server (`npm run backend`)
+5.  Start the app (`npm run ios` or `npm run android`)
+
+The URL of the backend server is configured in [react-native-app/App.js](react-native-app/App.js). If you are running the application from a physical device, you may need to update it with the IP address on which the backend is listening (e.g., the one of your computer).
 
 # Setup Guide
+
+Note: this is not needed for running the demo app included in this repo.
 
 #### Requirements
 
@@ -42,7 +38,17 @@ cd .. && npm run ios
 - [Node.js](https://nodejs.org/) 14+
 - Tested with [react-native](https://github.com/facebook/react-native/releases/tag/v0.64.0) v.0.64
 - Tested with IOS Deployment target 12.1
-- Tested with Android minSdkVersion 21
+- Tested with Android minSdkVersion 24
+- Make sure to register your `BundleId` & `AppGroupId`(in case of screensharing) with `Apple Developer Account`
+
+##### Register BundleId
+
+- Go to `Preferences` in xcode.
+- Log in to `Apple Developer Account` in `Accounts` section.
+- Now select your app's target & jump to `Signin & Capabilities` tab.
+- check the `Automatically manage signin`.
+- And select your team from the dropdown.
+- If your `BundleId` is not in `RED` color you are done creating provisioning profiles.
 
 #### Installation packages
 
@@ -55,10 +61,42 @@ cd .. && npm run ios
 
 Refer to the README of each package for further details.
 
-#### Screen Share Integration
+#### Screen Share Integration (experimental)
 
-- Android screen sharing works by default
+- Android screen sharing works by default below `Android 10` but for `Android 10` & above `Media Projection Foreground Service` is used
 - However for ios `Broadcast Upload Extension` is used
+
+#### Creating Media Projection Foreground Service
+
+- For screen sharing to work, your app needs to be running [`Foreground Services`][fservice].
+- Also for triggering `Foreground Service` from React code you need a native module which is there in the sample project.
+
+#### TL;DR
+
+- Copy `OngoingNotification` file from the sample project & put it with the `MainActivity` class.
+- Copy `MediaProjectionService` file from the sample project & put it with the `MainActivity` class.
+- Copy `InteractionModule` file from the sample project & put it with the `MainActivity` class.
+- Copy `MyAppPackage` file from the sample project & put it with the `MainActivity` class.
+- Now inside `MainApplication` class, within the `getPackages()` method add a package called `MyAppPackage` as shown below.
+
+```
+@Override
+protected List<ReactPackage> getPackages() {
+    List<ReactPackage> packages = new PackageList(this).getPackages();
+    packages.add(new MyAppPackage());
+    return packages;
+}
+```
+
+- Make sure to request the foreground service permission in `AndroidManifest.xml` as shown below
+  `<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>`
+- Make sure to provide type of service as `mediaProjection` in `AndroidManifest.xml` as shown below.
+
+```
+<service
+    android:name=".MediaProjectionService"
+    android:foregroundServiceType="mediaProjection" />
+```
 
 #### Creating the Broadcast Upload Extension
 
@@ -87,6 +125,7 @@ end
 
 > Note: If you can't find screen record button into your iPhone follow this [`link`][ssguide]
 
-[permissions]: https://developer.signalwire.com/apis/reference/video_room_permissions
+[permissions]: https://developer.signalwire.com/apis/reference/video_permissions
 [generate jwt token]: https://codesandbox.io/s/lingering-glitter-r8bxl
 [ssguide]: https://support.logmeininc.com/joinme/help/sharing-your-screen-on-ipad-or-iphone-joinme-t-joinme-share-ios
+[fservice]: https://developer.android.com/guide/components/foreground-services
