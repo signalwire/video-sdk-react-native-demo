@@ -14,7 +14,7 @@ import InCallManager from 'react-native-incall-manager';
 import styles from './styles';
 import Button from './button';
 import MyPicker from './picker';
-
+import { NativeModules, Platform } from 'react-native';
 import {
   SafeAreaView,
   Text,
@@ -28,6 +28,8 @@ import {
 const SERVER_URL = 'http://localhost:8080';
 
 const App = () => {
+  const {InteractionModule} = NativeModules;
+
   const [stream, setStream] = useState(null);
 
   const [modal, setModalVisibility] = useState(true);
@@ -132,6 +134,9 @@ const App = () => {
   };
 
   const startScreenShare = async () => {
+    if (Platform.OS === 'android') {
+      InteractionModule.launch();
+    }
     await room?.startScreenShare();
   };
 

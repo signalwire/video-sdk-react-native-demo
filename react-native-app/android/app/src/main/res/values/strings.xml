@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">VideoSdk</string>
+    <string name="ongoing_notification_title">ScreenShare</string>
+    <string name="ongoing_notification_text">Screen sharing is active!</string>
 </resources>

@@ -9,8 +9,7 @@ This example demonstrate the use of [`@signalwire/js`](https://www.npmjs.com/pac
 - Video mute/unmute
 - Deaf/Undeaf self
 - Hide/Show muted videos
-
-Screen-sharing does not currently work.
+- Screen sharing
 
 To try the example, follow the Getting Started section. If instead you'd like to setup the video SDK into your existing application, jump to the Setup Guide section. In any case, you can find step by step instructions at https://developer.signalwire.com/apis/docs/video-api-in-react-native.
 
@@ -61,7 +60,7 @@ Note: this is not needed for running the demo app included in this repo.
 
 Refer to the README of each package for further details.
 
-#### Screen Share Integration (experimental)
+#### Screen Share Integration
 
 - Android screen sharing works by default below `Android 10`, but for `Android 10` and above `Media Projection Foreground Service` needs to be used
 - For iOS, `Broadcast Upload Extension` needs to be used
