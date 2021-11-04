@@ -14,11 +14,11 @@ export default class MyPicker extends React.Component {
   render() {
     return (
       <Picker
-        selectedValue={this.selectedValue}
+        selectedValue={this.state.selectedValue}
         style={{height: 50}}
         onValueChange={(itemValue, itemIndex) => {
           this.selectedValue(itemValue);
-          this.props.onValueChange((itemValue, itemIndex));
+          this.props.onValueChange(itemValue, itemIndex);
         }}>
         <Picker.Item label="Change Layout" value="0" />
         <Picker.Item label="8x8" value="8x8" />
